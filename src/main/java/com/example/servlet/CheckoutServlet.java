@@ -8,8 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/cart")
-public class ViewCartServlet extends HttpServlet {
+@WebServlet("/checkout")
+public class CheckoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -17,8 +17,19 @@ public class ViewCartServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
-        var cart = SessionUtils.getCart(req.getSession());
-        req.setAttribute("cart", cart);
-        req.getRequestDispatcher("/cart.jsp").forward(req, resp);
+        req.getRequestDispatcher("/checkout.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        if (!SessionUtils.isLoggedIn(req.getSession())) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+        // Dummy checkout: clear cart and show confirmation
+        SessionUtils.clearCart(req.getSession());
+        req.setAttribute("message", "Order placed successfully!");
+        req.getRequestDispatcher("/checkout.jsp").forward(req, resp);
     }
 }
