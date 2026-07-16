@@ -1,0 +1,13 @@
+services:
+  ecommerce-app:
+    image: vaishnavidhulipala04/auto:app
+    ports:
+      - "1111:8080"
+    networks:
+      - ecommerce-network
+    deploy:
+      replicas: 2
+      
+networks:
+  ecommerce-network:
+    driver: overlay                    
